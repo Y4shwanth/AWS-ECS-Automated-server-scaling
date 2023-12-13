@@ -1,0 +1,41 @@
+name: scale-down-ecs-cluster
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "master" branch
+#   push:
+#     branches: [ "master" ]
+  
+  # Allows you to run this workflow manually from the Actions tab
+  schedule:
+    #- cron: '0 0 * * 2,3,4,5,6'
+    #- cron: '10 13 31 3 5'
+    #- cron: '20 7 * * 1,2,3,4,5'
+    # below cron is in UTC that executes at 23:59 pm everyday weekday
+   # - cron: '29 18 * * 1,2,3,4,5'
+    #- cron: '50 9 4 4 2'
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "scale-down"
+  scale-down:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+    environment: test
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.SECRET_KEY }}
+          aws-region: ${{ secrets.REGION }}
+          
+      - name: run shell script to scale-down the ASG
+        run: bash scale-down.sh
