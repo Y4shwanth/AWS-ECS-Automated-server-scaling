@@ -38,4 +38,4 @@ jobs:
           aws-secret-access-key: ${{ secrets.SECRET_KEY }}
           aws-region: ${{ secrets.REGION }}
       - name: scale-up 
-        run: python3 
+        run: bash scale-up.sh
